@@ -5,7 +5,7 @@
 #define MAX 10
 
 void Enfilar(char * pilha,char valor,int base);
-void Desenfilar(char *pilha);
+void Desenfilar(char *pilha,char exp,int base,int b);
 void Converter(char * exp,bool infixo,bool pre,bool pos);
 void VerExp(char * exp);
 int TamanhoExp(char * exp); 
@@ -13,12 +13,12 @@ void PosFixoConverte(char * exp);
 void PreFixoConverte(char * exp);
 void InfixoConverter(char * exp);
 
-int *ptam1,*ptam2,base1=0,base2=0;
-int tam =10;
+int *ptam1,*ptam2,base = 0,base1=0,base2=0;
+int tam;
 
 main(){
 	
-	int tam;
+	
 	printf("\t\t\t\t\t CONVERSOR DE NOTAÇÕES POLONESAS \n\n\n ",setlocale(LC_ALL,""));
 	printf("\t\t\t\t\t   Tamanho maximo da expressão: ",setlocale(LC_ALL,""));
 	scanf("%d",&tam);
@@ -100,16 +100,17 @@ void Enfilar(char * pilha,char valor,int base){
 	
 		pilha[base]=valor;
 	
-		
-	
 }
-
+void Desenfilar(char *pilha,char * exp,int base,int b){
+	exp[base]=pilha[b];
+	pilha[b]=NULL;
+}
 
 void PosFixoConverte(char * exp){
 	int t = TamanhoExp(exp);
 	
-	char pilha1[tam];
-	char pilha2[tam];
+	char pilha1[t];
+	char pilha2[t];
 		
 	for(int i = 0;i<=t-1;i++){
 
@@ -120,18 +121,33 @@ void PosFixoConverte(char * exp){
 		}
 	}
 		for(int i =0;i <=t;i++){
-		if(exp[i]=='+'){
+		if(exp[i]=='+'||exp[i]=='-'||exp[i]=='*'||exp[i]=='/'){
 			printf("Empilhando na Pilha 2 no indice (%d) \n",base2);
 			fflush(stdin);
 			Enfilar(pilha2,exp[i],base2);
 			base2++;
 		}
 	}
-	
-	fflush(stdin);
-	puts(pilha1);
-	puts(pilha2);
 
-		
+	base1=0;
+	base2=0;
+	int tp = TamanhoExp(pilha1);
+	int tp1 = TamanhoExp(pilha2);
+	for(int i = 0;i<tam-1;i++){
+		exp[i]=NULL;
+	}
+	for(int i=0;i<=tam-1;i++){
+		if(i<=tp-1){
+
+			Desenfilar(pilha1,exp,base1,base);
+			base1++;
+			base++;
+		}else{
+			Desenfilar(pilha2,exp,base1,base2);
+			base1++;
+			base2++;
+		}
+	}	
+	puts(exp);		
 }
 
